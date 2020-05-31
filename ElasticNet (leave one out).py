@@ -1,8 +1,4 @@
 
-# coding: utf-8
-
-# In[1]:
-
 
 import pandas as pd
 import numpy as np
@@ -18,18 +14,12 @@ from scipy.stats import spearmanr
 import math
 
 
-# In[2]:
-
-
 df_1 = pd.read_csv('ip_7.csv',header=0)
 y = pd.read_csv('weeks.csv',header = 0)
 df = df_1.transpose()
 df = df[1:]
 X = df
 X = X.dropna()
-
-
-# In[3]:
 
 
 median_pred = pd.DataFrame({"patient_id": X.index})
@@ -40,14 +30,10 @@ Y = Y["weeks"]
 Y
 
 
-# In[4]:
-
 
 X["p"] = [x.split("_")[0] for x in X.index]
 y["p"] = [x.split("_")[0] for x in Y.index]
 
-
-# In[5]:
 
 
 n_alphas = 100
@@ -65,8 +51,6 @@ result = []
 scaler = MinMaxScaler(feature_range=(0, 1))
 sc = StandardScaler()
 
-
-# In[6]:
 
 
 for patient in X["p"].unique():
@@ -117,13 +101,7 @@ print(result)
  
 
 
-# In[7]:
-
-
 spearmanr(y_train, en_net.predict(X_train) )
-
-
-# In[8]:
 
 
 print("Length of prediction:",len(result))
@@ -136,8 +114,6 @@ y_val  = y_true
 print(y_val)
 
 
-# In[9]:
-
 
 mse = mean_squared_error(y_true,result)
 print('Mean squared error:', mse)
@@ -149,8 +125,5 @@ log = -(math.log10(p))
 print('-Log(p_value):',log)
 
 
-# In[ ]:
 
-
-[5.17,0.44,0.016,0.024,1.03,31.72,29.06]
 
