@@ -1,9 +1,4 @@
 
-# coding: utf-8
-
-# In[9]:
-
-
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import numpy as np
@@ -25,18 +20,12 @@ from sklearn.gaussian_process.kernels import (RBF, Matern, RationalQuadratic,
                                               ConstantKernel)
 
 
-# In[10]:
-
 
 df_1 = pd.read_csv('ip_3.csv',header=0)
 y = pd.read_csv('weeks.csv',header = 0)
 df = df_1.transpose()
 df = df[1:]
 X = df
-
-
-# In[11]:
-
 
 median_pred = pd.DataFrame({"patient_id": X.index})
 y = pd.concat([median_pred, y], axis=1)
@@ -46,20 +35,10 @@ Y = Y["weeks"]
 Y
 
 
-# In[12]:
-
 
 X["p"] = [x.split("_")[0] for x in X.index]
 y["p"] = [x.split("_")[0] for x in Y.index]
 
-
-# In[13]:
-
-
-# ker_rbf = ConstantKernel(1.0, constant_value_bounds="fixed") * RBF(1.0, length_scale_bounds="fixed")
-# ker_rq = ConstantKernel(1.0, constant_value_bounds="fixed") * RationalQuadratic(alpha=0.1, length_scale=1)
-#ker_expsine = ConstantKernel(1.0, constant_value_bounds="fixed") * ExpSineSquared(1.0, 5.0, periodicity_bounds=(1e-2, 1e1))
-#, ker_expsine
 
 
 ker_rbf = ConstantKernel(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
@@ -75,9 +54,6 @@ prediction = []
 i = 0
 scaler = MinMaxScaler(feature_range=(0, 1))
 sc = StandardScaler()
-
-
-# In[14]:
 
 
 for patient in X["p"].unique():
@@ -97,31 +73,10 @@ for patient in X["p"].unique():
     grid_search = GridSearchCV(gp, param_grid=param_grid,cv=2)
     grid_search.fit(X_train,y_train)
 
-     
-    #training set prediction
-#     pred = grid_search.predict(X_train)
-#     prm = grid_search.best_params_
-    
-#     print(prm)
-#     alpha = prm.get('alpha')
-#     kernel = prm.get('kernel')
-#     n_restarts_optimizer = prm.get('n_restarts_optimizer')
-#     optimizer = prm.get('optimizer')
-
-    
-#     gp_new = GaussianProcessRegressor(alpha=alpha, kernel=kernel, n_restarts_optimizer=n_restarts_optimizer, optimizer=optimizer )
-#     gp_new.fit(X_train,y_train)
-    
-    #score = en.score(X_val, y_val)
-    
-    #prediction for the test set
     preds  = grid_search.predict(X_val)
     prediction = np.append(prediction, preds)
     i += 1
     
-
-
-# In[15]:
 
 
 print("Length of prediction:",len(prediction))
@@ -132,8 +87,6 @@ y_true = y.sort_values("patient_id")
 y_true = np.array(y_true.weeks)
 y_val  = y_true
 
-
-# In[16]:
 
 
 mse = mean_squared_error(y_val,prediction)
@@ -150,8 +103,4 @@ log = -(math.log10(p))
 print("-Log(p_val):",log)
 
 
-# In[ ]:
-
-
-[0.78,0.17,0.34,5.58,0.96,28.54,29.69]
 
